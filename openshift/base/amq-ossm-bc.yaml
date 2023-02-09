@@ -28,7 +28,7 @@ spec:
     type: Git
   strategy:
     dockerStrategy:
-      dockerfilePath: src/main/docker/Dockerfile.jvm.staged
+      dockerfilePath: src/main/docker/Dockerfile.staged-native
     type: Docker
   successfulBuildsHistoryLimit: 5
   triggers:

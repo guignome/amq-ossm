@@ -15,7 +15,8 @@
 #
 ###
 
-FROM registry.access.redhat.com/ubi8/openjdk-17:latest
+#FROM quay.io/quarkus/ubi-quarkus-mandrel-builder-image:22.3-java17
+FROM registry.access.redhat.com/quarkus/mandrel-22-rhel8:22.3-4
 
 USER root
 WORKDIR /build
@@ -24,12 +25,12 @@ RUN mkdir -p .mvn/wrapper
 COPY mvnw* .
 COPY .mvn/wrapper .mvn/wrapper
 COPY pom.xml .
-RUN ./mvnw dependency:go-offline
+#RUN ./mvnw dependency:go-offline
 
 COPY src src
 RUN ./mvnw package -Pnative
 
-FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6
+FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 WORKDIR /work/
 RUN chown 1001 /work \
     && chmod "g+rwX" /work \
