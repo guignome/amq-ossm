@@ -11,27 +11,27 @@ metadata:
     isFromDevfile: "true"
     openshift.io/generated-by: OpenShiftWebConsole
   labels:
-    app: amq-ossm
+    app: amq-ossm-producer
     app.kubernetes.io/component: amq-ossm
-    app.kubernetes.io/instance: amq-ossm
-    app.kubernetes.io/name: amq-ossm
+    app.kubernetes.io/instance: amq-ossm-producer
+    app.kubernetes.io/name: amq-ossm-producer
     app.kubernetes.io/part-of: amq-ossm
     app.openshift.io/runtime: amq-ossm
-  name: amq-ossm
+  name: amq-ossm-producer
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: amq-ossm
+      app: amq-ossm-producer
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: amq-ossm
-        deployment: amq-ossm
+        app: amq-ossm-producer
+        deployment: amq-ossm-producer
     spec:
       containers:
       - env:
@@ -41,9 +41,13 @@ spec:
           value: /projects
         - name: PROJECT_SOURCE
           value: /projects
-        image: image-registry.openshift-image-registry.svc:5000/test-application/amq-ossm@sha256:a731a24455b18493bc95f7e8c0bff82a32780c8605d82786df1b3fc394c53a8b
+        - name: QUARKUS_ARTEMIS_URL
+          value: tcp://artemis-hdls-svc:61616
+        - name: DEMO_CONSUMER
+          value: "false"
+        image: amq-ossm:latest
         imagePullPolicy: Always
-        name: amq-ossm
+        name: amq-ossm-producer
         ports:
         - containerPort: 8080
           name: http-quarkus

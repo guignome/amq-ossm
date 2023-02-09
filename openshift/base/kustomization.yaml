@@ -1,5 +1,7 @@
 resources:
 - amq-ossm-bc.yaml
-- amq-ossm-deployment.yaml
+- amq-ossm-producer-deployment.yaml
+- amq-ossm-consumer-deployment.yaml
 - amq-ossm-is.yaml
-- amq-ossm-svc.yaml
+- amq-ossm-producer-svc.yaml
+- amq-ossm-consumer-svc.yaml
