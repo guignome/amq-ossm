@@ -1,0 +1,5 @@
+resources:
+- amq-ossm-bc.yaml
+- amq-ossm-deployment.yaml
+- amq-ossm-is.yaml
+- amq-ossm-svc.yaml

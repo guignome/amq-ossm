@@ -1,0 +1,43 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  annotations:
+    app.openshift.io/vcs-ref: ""
+    app.openshift.io/vcs-uri: https://github.com/guignome/amq-ossm.git
+    openshift.io/generated-by: OpenShiftWebConsole
+  labels:
+    app: amq-ossm
+    app.kubernetes.io/component: amq-ossm
+    app.kubernetes.io/instance: amq-ossm
+    app.kubernetes.io/name: amq-ossm
+    app.kubernetes.io/part-of: amq-ossm
+    app.openshift.io/runtime: amq-ossm
+  name: amq-ossm
+spec:
+  failedBuildsHistoryLimit: 5
+  output:
+    to:
+      kind: ImageStreamTag
+      name: amq-ossm:latest
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    git:
+      uri: https://github.com/guignome/amq-ossm.git
+    type: Git
+  strategy:
+    dockerStrategy:
+      dockerfilePath: src/main/docker/Dockerfile.jvm.staged
+    type: Docker
+  successfulBuildsHistoryLimit: 5
+  triggers:
+  - generic:
+      secretReference:
+        name: amq-ossm-generic-webhook-secret
+    type: Generic
+  - github:
+      secretReference:
+        name: amq-ossm-github-webhook-secret
+    type: GitHub
+  - type: ConfigChange

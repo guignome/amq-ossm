@@ -1,0 +1,17 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  annotations:
+    app.openshift.io/vcs-ref: ""
+    app.openshift.io/vcs-uri: https://github.com/guignome/amq-ossm.git
+  labels:
+    app: amq-ossm
+    app.kubernetes.io/component: amq-ossm
+    app.kubernetes.io/instance: amq-ossm
+    app.kubernetes.io/name: amq-ossm
+    app.kubernetes.io/part-of: amq-ossm
+    app.openshift.io/runtime: amq-ossm
+  name: amq-ossm
+spec:
+  lookupPolicy:
+    local: false

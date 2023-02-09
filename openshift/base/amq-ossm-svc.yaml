@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.openshift.io/vcs-ref: ""
+    app.openshift.io/vcs-uri: https://github.com/guignome/amq-ossm.git
+    isFromDevfile: "true"
+    openshift.io/generated-by: OpenShiftWebConsole
+  labels:
+    app: amq-ossm
+    app.kubernetes.io/component: amq-ossm
+    app.kubernetes.io/instance: amq-ossm
+    app.kubernetes.io/name: amq-ossm
+    app.kubernetes.io/part-of: amq-ossm
+    app.openshift.io/runtime: amq-ossm
+  name: amq-ossm
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: http-quarkus
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  - name: http-8081
+    port: 8081
+    protocol: TCP
+    targetPort: 8081
+  selector:
+    app: amq-ossm
+    deployment: amq-ossm
+  sessionAffinity: None
+  type: ClusterIP
