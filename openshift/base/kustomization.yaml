@@ -5,3 +5,4 @@ resources:
 - amq-ossm-is.yaml
 - amq-ossm-producer-svc.yaml
 - amq-ossm-consumer-svc.yaml
+- servicemesh-member.yaml
