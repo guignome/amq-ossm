@@ -14,4 +14,4 @@ metadata:
   name: amq-ossm
 spec:
   lookupPolicy:
-    local: false
+    local: true

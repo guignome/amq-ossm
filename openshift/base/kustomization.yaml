@@ -1,4 +1,5 @@
 resources:
+- artemis.yaml
 - amq-ossm-bc.yaml
 - amq-ossm-producer-deployment.yaml
 - amq-ossm-consumer-deployment.yaml
