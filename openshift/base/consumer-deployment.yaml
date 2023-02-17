@@ -7,35 +7,34 @@ metadata:
     app.openshift.io/vcs-ref: ""
     app.openshift.io/vcs-uri: https://github.com/guignome/amq-ossm.git
     deployment.kubernetes.io/revision: "2"
-    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"amq-ossm:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"amq-ossm-producer\")].image"}]'
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"amq-ossm:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"consumer\")].image"}]'
     isFromDevfile: "true"
     openshift.io/generated-by: OpenShiftWebConsole
   labels:
-    app: amq-ossm-producer
+    app: consumer
     app.kubernetes.io/component: amq-ossm
-    app.kubernetes.io/instance: amq-ossm-producer
-    app.kubernetes.io/name: amq-ossm-producer
+    app.kubernetes.io/instance: consumer
+    app.kubernetes.io/name: consumer
     app.kubernetes.io/part-of: amq-ossm
     app.openshift.io/runtime: amq-ossm
-  name: amq-ossm-producer
+  name: consumer
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: amq-ossm-producer
+      app: consumer
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: amq-ossm-producer
+        app: consumer
         version: v1
-        deployment: amq-ossm-producer
+        deployment: consumer
       annotations:
         sidecar.istio.io/inject: "true"
-        "sidecar.istio.io/agentLogLevel": debug # level can be: trace, debug, info, warning, error, critical, off
         #proxy.istio.io/config: '{ "holdApplicationUntilProxyStarts": true }'
     spec:
       containers:
@@ -49,12 +48,12 @@ spec:
         - name: QUARKUS_ARTEMIS_URL
           value: tcp://artemis-hdls-svc:61616
         - name: DEMO_CONSUMER
-          value: "false"
+          value: "true"
         - name: START_DELAY
           value: '5000'
         image: amq-ossm:latest
         imagePullPolicy: Always
-        name: amq-ossm-producer
+        name: consumer
         ports:
         - containerPort: 8080
           name: http-quarkus

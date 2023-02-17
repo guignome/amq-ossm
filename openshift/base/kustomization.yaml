@@ -1,12 +1,12 @@
 resources:
 - artemis.yaml
 - amq-ossm-bc.yaml
-- amq-ossm-producer-deployment.yaml
-- amq-ossm-consumer-deployment.yaml
+- producer-deployment.yaml
+- consumer-deployment.yaml
 - amq-ossm-is.yaml
-- amq-ossm-producer-svc.yaml
-- amq-ossm-consumer-svc.yaml
+- producer-svc.yaml
+- consumer-svc.yaml
 - servicemesh-member.yaml
 - gw.yaml
-- amq-ossm-producer-vs.yaml
+- producer-vs.yaml
 - artemis-vs.yaml

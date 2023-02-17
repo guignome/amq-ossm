@@ -8,12 +8,12 @@ metadata:
     openshift.io/generated-by: OpenShiftWebConsole
   labels:
     app: amq-ossm
-    app.kubernetes.io/component: amq-ossm-producer
-    app.kubernetes.io/instance: amq-ossm-producer
-    app.kubernetes.io/name: amq-ossm-producer
+    app.kubernetes.io/component: producer
+    app.kubernetes.io/instance: producer
+    app.kubernetes.io/name: producer
     app.kubernetes.io/part-of: amq-ossm
-    app.openshift.io/runtime: amq-ossm-producer
-  name: amq-ossm-producer
+    app.openshift.io/runtime: producer
+  name: producer
 spec:
   internalTrafficPolicy: Cluster
   ipFamilies:
@@ -29,7 +29,7 @@ spec:
     protocol: TCP
     targetPort: 8081
   selector:
-    app: amq-ossm-producer
-    deployment: amq-ossm-producer
+    app: producer
+    deployment: producer
   sessionAffinity: None
   type: ClusterIP

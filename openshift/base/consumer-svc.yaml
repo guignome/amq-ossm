@@ -7,13 +7,13 @@ metadata:
     isFromDevfile: "true"
     openshift.io/generated-by: OpenShiftWebConsole
   labels:
-    app: amq-ossm-consumer
-    app.kubernetes.io/component: amq-ossm-consumer
-    app.kubernetes.io/instance: amq-ossm-consumer
-    app.kubernetes.io/name: amq-ossm-consumer
+    app: consumer
+    app.kubernetes.io/component: consumer
+    app.kubernetes.io/instance: consumer
+    app.kubernetes.io/name: consumer
     app.kubernetes.io/part-of: amq-ossm
-    app.openshift.io/runtime: amq-ossm-consumer
-  name: amq-ossm-consumer
+    app.openshift.io/runtime: consumer
+  name: consumer
 spec:
   internalTrafficPolicy: Cluster
   ipFamilies:
@@ -29,7 +29,7 @@ spec:
     protocol: TCP
     targetPort: 8081
   selector:
-    app: amq-ossm-consumer
-    deployment: amq-ossm-consumer
+    app: consumer
+    deployment: consumer
   sessionAffinity: None
   type: ClusterIP
