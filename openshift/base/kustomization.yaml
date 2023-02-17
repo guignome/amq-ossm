@@ -7,3 +7,6 @@ resources:
 - amq-ossm-producer-svc.yaml
 - amq-ossm-consumer-svc.yaml
 - servicemesh-member.yaml
+- gw.yaml
+- amq-ossm-producer-vs.yaml
+- artemis-vs.yaml

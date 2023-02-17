@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: amq
+spec:
+  gateways:
+  - ingress-gateway
+  hosts:
+  - article.apps.vlab-sno.vlab.com
+  http:
+  - match:
+    - uri:
+        prefix: /console
+    route:
+    - destination:
+        host: artemis-ss-0.artemis-hdls-svc.guillaume-article12.svc.cluster.local
+        port:
+          number: 8161
+

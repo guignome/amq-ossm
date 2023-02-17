@@ -1,0 +1,14 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: ingress-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - hosts:
+    - article.apps.vlab-sno.vlab.com
+    port:
+      name: http
+      number: 80
+      protocol: HTTP

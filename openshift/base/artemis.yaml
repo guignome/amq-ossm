@@ -3,6 +3,47 @@ kind: ActiveMQArtemis
 metadata:
   name: artemis
 spec:
+  acceptors:
+  - expose: true
+    name: all
+    port: 61616
+  adminPassword: admin123
+  adminUser: admin
+  console:
+    expose: true
   deploymentPlan:
+    labels:
+      app: amq
+      app.kubernetes.io/name: amq
+      app.kubernetes.io/component: amq
+      version: v7.10
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - amq
+            topologyKey: topology.kubernetes.io/zone
+          weight: 100
+    clustered: true
+    image: registry.redhat.io/amq7/amq-broker-rhel8:7.10
+    jolokiaAgentEnabled: false
+    journalType: nio
+    managementRBACEnabled: true
+    messageMigration: true
+    persistenceEnabled: true
+    requireLogin: false
+    resources:
+      limits:
+        cpu: "2"
+        memory: 4096M
+      requests:
+        cpu: 500m
+        memory: 2048M
     size: 1
-    image: placeholder
+    storage:
+      size: 20Gi

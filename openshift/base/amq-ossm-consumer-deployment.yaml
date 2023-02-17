@@ -31,6 +31,7 @@ spec:
     metadata:
       labels:
         app: amq-ossm-consumer
+        version: v1
         deployment: amq-ossm-consumer
       annotations:
         sidecar.istio.io/inject: "true"
@@ -48,6 +49,8 @@ spec:
           value: tcp://artemis-hdls-svc:61616
         - name: DEMO_CONSUMER
           value: "true"
+        - name: START_DELAY
+          value: '5000'
         image: amq-ossm:latest
         imagePullPolicy: Always
         name: amq-ossm-consumer

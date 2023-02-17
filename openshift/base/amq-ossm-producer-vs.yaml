@@ -1,0 +1,20 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: amq-ossm-producer
+spec:
+  gateways:
+  - ingress-gateway
+  hosts:
+  - 'article'
+  http:
+  - match:
+    - uri:
+        prefix: /hub-devint4/ses-service-v1/ses/
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: amq-ossm-producer
+        port:
+          number: 8080

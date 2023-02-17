@@ -31,9 +31,11 @@ spec:
     metadata:
       labels:
         app: amq-ossm-producer
+        version: v1
         deployment: amq-ossm-producer
       annotations:
         sidecar.istio.io/inject: "true"
+        "sidecar.istio.io/agentLogLevel": debug # level can be: trace, debug, info, warning, error, critical, off
         #proxy.istio.io/config: '{ "holdApplicationUntilProxyStarts": true }'
     spec:
       containers:
@@ -48,6 +50,8 @@ spec:
           value: tcp://artemis-hdls-svc:61616
         - name: DEMO_CONSUMER
           value: "false"
+        - name: START_DELAY
+          value: '5000'
         image: amq-ossm:latest
         imagePullPolicy: Always
         name: amq-ossm-producer
