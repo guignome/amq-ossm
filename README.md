@@ -23,6 +23,6 @@ oc label namespace <mynamespace> istio-injection=enabled
 
 ## Patch the amq statfulset
 ```
-oc patch statefulset/artemis-ss -p '{"spec":{"template":{"metadata":{"annotations":{"sidecar.istio.io/inject":"true", "traffic.sidecar.istio.io/excludeInboundPorts":"7800"}}}}}'
+oc patch statefulset/artemis-ss -p '{"spec":{"template":{"metadata":{"annotations":{"sidecar.istio.io/inject":"true", "traffic.sidecar.istio.io/excludeInboundPorts":"7800,7900"}}}}}'
 # oc patch statefulset/artemis-ss -p '{"spec":{"template":{"metadata":{"annotations":{"sidecar.istio.io/inject":"true"}}}}}'
 ```

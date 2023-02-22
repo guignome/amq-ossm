@@ -1,0 +1,9 @@
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: tls-amq
+spec:
+  host: artemis-hdls-svc
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL

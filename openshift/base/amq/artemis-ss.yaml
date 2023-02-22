@@ -1,0 +1,301 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    ActiveMQArtemis: artemis
+    application: artemis-app
+  name: artemis-ss
+spec:
+  podManagementPolicy: OrderedReady
+  replicas: 2
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      ActiveMQArtemis: artemis
+      application: artemis-app
+  serviceName: artemis-hdls-svc
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "true"
+        traffic.sidecar.istio.io/excludeInboundPorts: "7800"
+      labels:
+        ActiveMQArtemis: artemis
+        app: amq
+        app.kubernetes.io/component: amq
+        app.kubernetes.io/name: amq
+        application: artemis-app
+        com.company: Red_Hat
+        rht.comp: Broker_AMQ
+        rht.comp_ver: 7.10.2
+        rht.prod_name: Red_Hat_Integration
+        rht.prod_ver: 2022.Q4
+        rht.subcomp: broker-amq
+        rht.subcomp_t: application
+        version: v7.10
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - amq
+              topologyKey: topology.kubernetes.io/zone
+            weight: 100
+      containers:
+      - command:
+        - /bin/sh
+        - -c
+        - export STATEFUL_SET_ORDINAL=${HOSTNAME##*-};exec /opt/amq/bin/launch.sh
+        - start
+        env:
+        - name: AMQ_ACCEPTORS
+          valueFrom:
+            secretKeyRef:
+              key: AMQ_ACCEPTORS
+              name: artemis-netty-secret
+        - name: AMQ_ADDRESSES
+        - name: AMQ_ANYCAST_PREFIX
+        - name: AMQ_CLUSTERED
+          value: "true"
+        - name: AMQ_CLUSTER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: AMQ_CLUSTER_PASSWORD
+              name: artemis-credentials-secret
+        - name: AMQ_CLUSTER_USER
+          valueFrom:
+            secretKeyRef:
+              key: AMQ_CLUSTER_USER
+              name: artemis-credentials-secret
+        - name: AMQ_CONNECTORS
+          valueFrom:
+            secretKeyRef:
+              key: AMQ_CONNECTORS
+              name: artemis-netty-secret
+        - name: AMQ_DATA_DIR
+          value: /opt/artemis/data
+        - name: AMQ_DATA_DIR_LOGGING
+          value: "true"
+        - name: AMQ_ENABLE_JOLOKIA_AGENT
+          value: "false"
+        - name: AMQ_ENABLE_MANAGEMENT_RBAC
+          value: "true"
+        - name: AMQ_ENABLE_METRICS_PLUGIN
+          value: "false"
+        - name: AMQ_EXTRA_ARGS
+          value: --no-autotune
+        - name: AMQ_GLOBAL_MAX_SIZE
+          value: 100 mb
+        - name: AMQ_JOURNAL_TYPE
+          value: nio
+        - name: AMQ_MULTICAST_PREFIX
+        - name: AMQ_NAME
+          value: amq-broker
+        - name: AMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: AMQ_PASSWORD
+              name: artemis-credentials-secret
+        - name: AMQ_QUEUES
+        - name: AMQ_REQUIRE_LOGIN
+          value: "false"
+        - name: AMQ_ROLE
+          value: admin
+        - name: AMQ_TRANSPORTS
+        - name: AMQ_USER
+          valueFrom:
+            secretKeyRef:
+              key: AMQ_USER
+              name: artemis-credentials-secret
+        - name: CONFIG_BROKER
+          value: "false"
+        - name: CONFIG_INSTANCE_DIR
+          value: /amq/init/config
+        - name: OPENSHIFT_DNS_PING_SERVICE_PORT
+          value: "7800"
+        - name: PING_SVC_NAME
+          value: artemis-ping-svc
+        - name: POD_NAMESPACE
+        - name: TRIGGERED_ROLL_COUNT
+          value: a78e4b9e
+        image: registry.redhat.io/amq7/amq-broker-rhel8:7.10
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 8161
+          timeoutSeconds: 5
+        name: artemis-container
+        readinessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - /opt/amq/bin/readinessProbe.sh
+          failureThreshold: 3
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        resources:
+          limits:
+            cpu: "1"
+            memory: 512M
+          requests:
+            cpu: 100m
+            memory: 128M
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /opt/artemis/data
+          name: artemis
+        - mountPath: /amq/extra/configmaps/artemis-props-00000001
+          name: configmap-artemis-props-00000001
+          readOnly: true
+        - mountPath: /amq/init/config
+          name: amq-cfg-dir
+      dnsPolicy: ClusterFirst
+      initContainers:
+      - args:
+        - -c
+        - /opt/amq/bin/launch.sh && /opt/amq-broker/script/default.sh
+        command:
+        - /bin/bash
+        env:
+        - name: AMQ_ACCEPTORS
+          valueFrom:
+            secretKeyRef:
+              key: AMQ_ACCEPTORS
+              name: artemis-netty-secret
+        - name: AMQ_ADDRESSES
+        - name: AMQ_ANYCAST_PREFIX
+        - name: AMQ_CLUSTERED
+          value: "true"
+        - name: AMQ_CLUSTER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: AMQ_CLUSTER_PASSWORD
+              name: artemis-credentials-secret
+        - name: AMQ_CLUSTER_USER
+          valueFrom:
+            secretKeyRef:
+              key: AMQ_CLUSTER_USER
+              name: artemis-credentials-secret
+        - name: AMQ_CONNECTORS
+          valueFrom:
+            secretKeyRef:
+              key: AMQ_CONNECTORS
+              name: artemis-netty-secret
+        - name: AMQ_DATA_DIR
+          value: /opt/artemis/data
+        - name: AMQ_DATA_DIR_LOGGING
+          value: "true"
+        - name: AMQ_ENABLE_JOLOKIA_AGENT
+          value: "false"
+        - name: AMQ_ENABLE_MANAGEMENT_RBAC
+          value: "true"
+        - name: AMQ_ENABLE_METRICS_PLUGIN
+          value: "false"
+        - name: AMQ_EXTRA_ARGS
+          value: --no-autotune
+        - name: AMQ_GLOBAL_MAX_SIZE
+          value: 100 mb
+        - name: AMQ_JOURNAL_TYPE
+          value: nio
+        - name: AMQ_MULTICAST_PREFIX
+        - name: AMQ_NAME
+          value: amq-broker
+        - name: AMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: AMQ_PASSWORD
+              name: artemis-credentials-secret
+        - name: AMQ_QUEUES
+        - name: AMQ_REQUIRE_LOGIN
+          value: "false"
+        - name: AMQ_ROLE
+          value: admin
+        - name: AMQ_TRANSPORTS
+        - name: AMQ_USER
+          valueFrom:
+            secretKeyRef:
+              key: AMQ_USER
+              name: artemis-credentials-secret
+        - name: CONFIG_INSTANCE_DIR
+          value: /amq/init/config
+        - name: JAVA_OPTS
+          value: -Dbroker.properties=/amq/extra/configmaps/artemis-props-00000001/broker.properties
+        - name: OPENSHIFT_DNS_PING_SERVICE_PORT
+          value: "7800"
+        - name: PING_SVC_NAME
+          value: artemis-ping-svc
+        - name: POD_NAMESPACE
+        - name: RUN_BROKER
+          value: "false"
+        - name: TRIGGERED_ROLL_COUNT
+          value: "0"
+        image: registry.redhat.io/amq7/amq-broker-init-rhel8@sha256:b4d18fdf02b37de84dc1b04090d26bba7757a86312f61bf58bb756c97b917e2d
+        imagePullPolicy: IfNotPresent
+        name: artemis-container-init
+        resources:
+          limits:
+            cpu: "1"
+            memory: 512M
+          requests:
+            cpu: 100m
+            memory: 128M
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /amq/init/config
+          name: amq-cfg-dir
+        - mountPath: /init_cfg_root
+          name: tool-dir
+        - mountPath: /amq/extra/configmaps/artemis-props-00000001
+          name: configmap-artemis-props-00000001
+          readOnly: true
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 60
+      volumes:
+      - name: artemis
+        persistentVolumeClaim:
+          claimName: artemis
+      - configMap:
+          defaultMode: 420
+          name: artemis-props-00000001
+        name: configmap-artemis-props-00000001
+      - emptyDir: {}
+        name: amq-cfg-dir
+      - emptyDir: {}
+        name: tool-dir
+  updateStrategy:
+    rollingUpdate:
+      partition: 0
+    type: RollingUpdate
+  volumeClaimTemplates:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      labels:
+        ActiveMQArtemis: artemis
+        application: artemis-app
+      name: artemis
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 20Gi
+      volumeMode: Filesystem
+    status:
+      phase: Pending

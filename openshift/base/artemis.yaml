@@ -5,8 +5,9 @@ metadata:
 spec:
   acceptors:
   - expose: true
-    name: all
+    name: tcp-acceptor
     port: 61616
+    protocols: amqp
   adminPassword: admin123
   adminUser: admin
   console:
@@ -39,11 +40,11 @@ spec:
     requireLogin: false
     resources:
       limits:
-        cpu: "2"
-        memory: 4096M
+        cpu: "1"
+        memory: 512M
       requests:
-        cpu: 500m
-        memory: 2048M
-    size: 1
+        cpu: 100m
+        memory: 128M
+    size: 2
     storage:
       size: 20Gi
