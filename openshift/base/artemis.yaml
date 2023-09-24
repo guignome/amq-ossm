@@ -1,50 +1,28 @@
-apiVersion: broker.amq.io/v1beta1
 kind: ActiveMQArtemis
+apiVersion: broker.amq.io/v1beta1
 metadata:
   name: artemis
 spec:
-  acceptors:
-  - expose: true
-    name: tcp-acceptor
-    port: 61616
-    protocols: amqp
-  adminPassword: admin123
-  adminUser: admin
-  console:
-    expose: true
   deploymentPlan:
-    labels:
-      app: amq
-      app.kubernetes.io/name: amq
-      app.kubernetes.io/component: amq
-      version: v7.10
-    affinity:
-      podAntiAffinity:
-        preferredDuringSchedulingIgnoredDuringExecution:
-        - podAffinityTerm:
-            labelSelector:
-              matchExpressions:
-              - key: app
-                operator: In
-                values:
-                - amq
-            topologyKey: topology.kubernetes.io/zone
-          weight: 100
-    clustered: true
-    image: registry.redhat.io/amq7/amq-broker-rhel8:7.10
+    image: placeholder
     jolokiaAgentEnabled: false
     journalType: nio
     managementRBACEnabled: true
-    messageMigration: true
-    persistenceEnabled: true
+    messageMigration: false
+    persistenceEnabled: false
     requireLogin: false
-    resources:
-      limits:
-        cpu: "1"
-        memory: 512M
-      requests:
-        cpu: 100m
-        memory: 128M
     size: 2
-    storage:
-      size: 20Gi
+    enableMetricsPlugin: true
+    annotations:
+      prometheus.io/path: /metrics/
+      prometheus.io/port: '8162'
+      prometheus.io/scheme: http
+      prometheus.io/scrape: 'true'
+      traffic.sidecar.istio.io/excludeInboundPorts: '7800'
+  env:
+  - name: JAVA_ARGS_APPEND
+    value: >-
+      -Dwebconfig.bindings.my-binding.uri=http://localhost:8162
+      -Dwebconfig.bindings.my-binding.apps.my-app.url=metrics
+      -Dwebconfig.bindings.my-binding.apps.my-app.war=metrics.war
+      

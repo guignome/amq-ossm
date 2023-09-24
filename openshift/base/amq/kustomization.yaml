@@ -1,7 +1,0 @@
-resources:
-- artemis-ss.yaml
-- artemis-cm.yaml
-- artemis-credentials-secret.yaml
-- artemis-netty-secret.yaml
-- artemis-svc.yaml
-- artemis-pvc.yaml
