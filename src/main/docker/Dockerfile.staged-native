@@ -28,7 +28,7 @@ COPY pom.xml .
 #RUN ./mvnw dependency:go-offline
 
 COPY src src
-RUN ./mvnw package -Pnative
+RUN ./mvnw package --batch-mode -Pnative
 
 FROM registry.access.redhat.com/ubi8/ubi-minimal:latest as runtime
 WORKDIR /work
